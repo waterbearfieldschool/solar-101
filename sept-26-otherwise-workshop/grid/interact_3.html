@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Watt-Hours Grid</title>
+  <!-- Load p5.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <!-- Load p5.svg addon -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js-svg/1.1.1/p5.svg.min.js"></script>
+</head>
+<body>
+  <h2>Watt-Hours Grid</h2>
+
+  <label for="wattInput">Watt-hours:</label>
+  <input type="number" id="wattInput" value="100">
+
+  <label for="unitInput">Wh per square:</label>
+  <input type="number" id="unitInput" value="10">
+
+  <label for="colorInput">Square color:</label>
+  <input type="color" id="colorInput" value="#666666">
+
+  <button onclick="generateGrid()">Generate</button>
+  <button onclick="downloadPNG()">Download PNG</button>
+  <button onclick="downloadSVG()">Download SVG</button>
+
+  <p>Each square = <span id="unitLabel"></span> Wh</p>
+
+<script>
+let unit = 10;   // default Wh per square
+let squares = 0;
+let size = 40;   // square size
+let gap = 8;     // spacing
+let chosenColor = "#666666";
+
+function setup() {
+  createCanvas(500, 500);
+  noLoop();
+  document.getElementById("unitLabel").innerText = unit;
+}
+
+function draw() {
+  background(255);
+  noStroke();
+  
+  if (squares <= 0) return;
+
+  // Find layout close to square
+  let cols = ceil(sqrt(squares));
+  let rows = ceil(squares / cols);
+
+  resizeCanvas(cols * (size + gap) + gap, rows * (size + gap) + gap);
+
+  for (let i = 0; i < squares; i++) {
+    let x = i % cols;
+    let y = floor(i / cols);
+    fill(chosenColor);
+    rect(x * (size + gap) + gap, y * (size + gap) + gap, size, size);
+  }
+}
+
+function generateGrid() {
+  let wattHours = parseInt(document.getElementById("wattInput").value);
+  unit = parseInt(document.getElementById("unitInput").value);
+  chosenColor = document.getElementById("colorInput").value;
+  document.getElementById("unitLabel").innerText = unit;
+
+  if (unit > 0 && wattHours > 0) {
+    squares = Math.ceil(wattHours / unit);
+  } else {
+    squares = 0;
+  }
+  redraw();
+}
+
+function downloadPNG() {
+  saveCanvas('watt_hours_grid', 'png');
+}
+
+function downloadSVG() {
+  // Create SVG canvas and redraw
+  let svgGraphics = createGraphics(width, height, SVG);
+  svgGraphics.noStroke();
+  svgGraphics.background(255);
+
+  if (squares > 0) {
+    let cols = ceil(sqrt(squares));
+    let rows = ceil(squares / cols);
+
+    for (let i = 0; i < squares; i++) {
+      let x = i % cols;
+      let y = floor(i / cols);
+      svgGraphics.fill(chosenColor);
+      svgGraphics.rect(x * (size + gap) + gap, y * (size + gap) + gap, size, size);
+    }
+  }
+
+  // Save the SVG
+  save(svgGraphics, 'watt_hours_grid.svg');
+}
+</script>
+</body>
+</html>
+

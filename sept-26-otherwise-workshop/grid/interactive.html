@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Watt-Hours Grid</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body>
+  <h2>Watt-Hours Grid</h2>
+  <label for="wattInput">Watt-hours:</label>
+  <input type="number" id="wattInput" value="100">
+
+  <label for="unitInput">Wh per square:</label>
+  <input type="number" id="unitInput" value="10">
+
+  <button onclick="generateGrid()">Generate</button>
+  <button onclick="downloadImage()">Download PNG</button>
+
+  <p>Each square = <span id="unitLabel"></span> Wh</p>
+
+<script>
+let unit = 10;   // default Wh per square
+let squares = 0;
+
+function setup() {
+  createCanvas(500, 500);
+  noLoop(); // don’t automatically redraw
+  document.getElementById("unitLabel").innerText = unit;
+}
+
+function draw() {
+  background(255);
+  noStroke();
+  
+  let size = 40; // square size
+  let gap = 8;   // spacing
+  let cols = floor(width / (size + gap));
+  
+  for (let i = 0; i < squares; i++) {
+    let x = i % cols;
+    let y = floor(i / cols);
+    fill(100);
+    rect(x * (size + gap) + gap, y * (size + gap) + gap, size, size);
+  }
+}
+
+function generateGrid() {
+  let wattHours = parseInt(document.getElementById("wattInput").value);
+  unit = parseInt(document.getElementById("unitInput").value);
+  document.getElementById("unitLabel").innerText = unit;
+
+  if (unit > 0) {
+    squares = Math.ceil(wattHours / unit);
+  } else {
+    squares = 0;
+  }
+  redraw();
+}
+
+function downloadImage() {
+  saveCanvas('watt_hours_grid', 'png');
+}
+</script>
+</body>
+</html>
+

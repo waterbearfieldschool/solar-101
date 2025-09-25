@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>p5.js Grid of Squares</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body>
+<script>
+function setup() {
+  createCanvas(400, 400);
+  background(255);
+  noStroke();
+  
+  let cols = 6;   // number of squares across
+  let rows = 5;   // number of squares down
+  let size = 50;  // size of each square
+  let gap = 10;   // spacing between squares
+  
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      fill(100); // dark gray
+      rect(x * (size + gap) + 20, y * (size + gap) + 20, size, size);
+    }
+  }
+}
+</script>
+</body>
+</html>
